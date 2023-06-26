@@ -1,0 +1,63 @@
+// Colores para el texto
+public static final String RESET = "\u001B[0m";
+public static final String BLACK = "\u001B[30m";
+public static final String RED = "\u001B[31m";
+public static final String GREEN = "\u001B[32m";
+public static final String YELLOW = "\u001B[33m";
+public static final String BLUE = "\u001B[34m";
+public static final String PURPLE = "\u001B[35m";
+public static final String CYAN = "\u001B[36m";
+public static final String WHITE = "\u001B[37m";
+
+// Colores de fondo para el texto
+public static final String BLACK_BACKGROUND = "\u001B[40m";
+public static final String RED_BACKGROUND = "\u001B[41m";
+public static final String GREEN_BACKGROUND = "\u001B[42m";
+public static final String YELLOW_BACKGROUND = "\u001B[43m";
+public static final String BLUE_BACKGROUND = "\u001B[44m";
+public static final String PURPLE_BACKGROUND = "\u001B[45m";
+public static final String CYAN_BACKGROUND = "\u001B[46m";
+public static final String WHITE_BACKGROUND = "\u001B[47m";
+
+ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_RING, 100);
+toneGenerator.startTone(ToneGenerator.TONE_CDMA_PIP, 500); // Tono CDMA_PIP durante 500 milisegundos
+// Espera para que se emita el tono
+
+try {
+Thread.sleep(1000);
+} catch (InterruptedException e) {
+e.printStackTrace();
+}
+toneGenerator.release(); // Liberar recursos del ToneGenerator
+
+
+String rutaSonido = "src\\main\\java\\com\\pablo\\archivos\\Alerta.wav";
+try {
+// Obtener el archivo de sonido
+
+AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(Gestiones.class.getResourceAsStream(rutaSonido));
+
+
+// Obtener el formato de audio del archivo
+AudioFormat format = audioInputStream.getFormat();
+
+// Crear una fuente de datos de audio
+DataLine.Info info = new DataLine.Info(Clip.class, format);
+Clip clip = (Clip) AudioSystem.getLine(info);
+
+// Abrir el flujo de audio y cargar los datos
+clip.open(audioInputStream);
+
+// Reproducir el sonido
+clip.start();
+
+// Esperar a que termine la reproducción
+Thread.sleep(clip.getMicrosecondLength() / 1000);
+
+// Cerrar el clip y el flujo de audio
+clip.stop();
+clip.close();
+audioInputStream.close();
+} catch (Exception e) {
+e.printStackTrace();
+}
